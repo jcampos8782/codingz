@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace hello_dotnet_core.FeaturesCs6
+namespace hello_dotnet_core.LanguageFeatures
 {
     public class ReadOnlyAutoProperties
     {
@@ -100,13 +100,5 @@ namespace hello_dotnet_core.FeaturesCs6
                 Console.WriteLine("The secret is out!");
             }
         }
-    }
-
-    // Nothing here... just a class for the demo
-    public class Person
-    {
-        public string FirstName { get; set; }
-        public string LastName { get; set; }
-        public string MiddleName { get; set; }
     }
 }
