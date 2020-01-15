@@ -9,4 +9,7 @@
   <ItemGroup>
     <Compile Remove="Word.cs" />
   </ItemGroup>
+  <ItemGroup>
+    <Folder Include="DataStructures\" />
+  </ItemGroup>
 </Project>
