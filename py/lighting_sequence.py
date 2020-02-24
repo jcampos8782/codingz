@@ -14,40 +14,19 @@ For example:
 def get_lights_for_day(10, [0,0,1,1,0,1,0,0]
 
 Output should be an array of 1s and 0s which represent the state of the lights on day n.
+
+For an explanation of this solution, visit http://blog.jsoncampos.com/2020/02/24/interview-question-which-lights/
 """
+import functools
 
 
 def get_lights_for_day_n(day, lights):
-    # convert the "lights" array to a sequence of bits
-    light_sequence = 0x0
-
-    for light in lights:
-        light_sequence |= light
-        light_sequence <<= 1
-
-    # Undo the last shift
-    light_sequence >>= 1
+    light_sequence = functools.reduce(lambda a, b: (a << 1) | b, lights)
 
     while day > 0:
-        """
-         Perform a left shift and a right shift of the bits which can be used to solve which lights come on for 
-         day n+1.
-         
-         There are two cases:
-            1) Lights in both neighbors are ON. Performing an AND of the left and right shifts will give you which lights
-               should come on for this case.
-            2) Lights in both neighbors are OFF. Performing an OR of the left and right shift will place a 0 where neither
-               neighbor had a light on. Perform an XOR with 0xFF to determine which lights come on in this case.
-        
-        Perform an OR of the previous two cases to figure out which lights come on for day n + 1.
-        Finally, we care only about the 8 houses. AND with 0xFF to gain the solution. 
-        """
         left_shift = light_sequence << 1
         right_shift = light_sequence >> 1
-        tomorrow = ((left_shift & right_shift) | ((left_shift | right_shift) ^ 0xFF)) & 0xFF
-
-        # Set light_sequence for the next iteration and subtract a day
-        light_sequence = tomorrow
+        light_sequence = ((left_shift & right_shift) | ((left_shift | right_shift) ^ 0xFF))
         day -= 1
 
     return list(map(lambda n: int(n), "{0:08b}".format(light_sequence)))
