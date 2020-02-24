@@ -29,23 +29,25 @@ def get_lights_for_day_n(day, lights):
     light_sequence >>= 1
 
     while day > 0:
-        # To turn on lights where each light around was on (1), shift left and right and perform a bitwise AND
+        """
+         Perform a left shift and a right shift of the bits which can be used to solve which lights come on for 
+         day n+1.
+         
+         There are two cases:
+            1) Lights in both neighbors are ON. Performing an AND of the left and right shifts will give you which lights
+               should come on for this case.
+            2) Lights in both neighbors are OFF. Performing an OR of the left and right shift will place a 0 where neither
+               neighbor had a light on. Perform an XOR with 0xFF to determine which lights come on in this case.
+        
+        Perform an OR of the previous two cases to figure out which lights come on for day n + 1.
+        Finally, we care only about the 8 houses. AND with 0xFF to gain the solution. 
+        """
         left_shift = light_sequence << 1
         right_shift = light_sequence >> 1
-        tomorrow = left_shift & right_shift
+        tomorrow = ((left_shift & right_shift) | ((left_shift | right_shift) ^ 0xFF)) & 0xFF
 
-        # To turn on lights where each light around was off (0), complement and then perform the same shifting
-        # and bitwise AND. Remember that the lights just beyond the end of our bits are assumed to be always
-        # off. That means in our shifts we need to flip the high end bit in the right shift and the low end
-        # bit in left shift
-        complement = light_sequence ^ 0xFF
-        left_shift = ((complement << 1) | 0x1) & 0xFF
-        right_shift = ((complement >> 1) | 0x80) & 0xFF
-
-        # Now perform an OR of the two sets of bits to determine which lights would be on on this day.
-        tomorrow |= left_shift & right_shift & 0xFF
+        # Set light_sequence for the next iteration and subtract a day
         light_sequence = tomorrow
-
         day -= 1
 
     return list(map(lambda n: int(n), "{0:08b}".format(light_sequence)))
