@@ -5,19 +5,23 @@ This function should return the number of steps it will take for all nodes to be
 """
 
 
-def steps_to_populate(arr):
+def steps_to_populate(rows, cols, grid):
     # First find all unpopulated nodes and add them to a set
-    unpopulated = set([(row, col) for row in range(len(arr)) for col in range(len(arr[row])) if arr[row][col] == 0])
+    unpopulated = set((row, col) for row in range(rows) for col in range(cols) if grid[row][col] == 0)
+
+    # If there are no ones return.
+    if len(unpopulated) == rows * cols:
+        return float("inf")
 
     # Each iteration of this while loop will increment the steps required by one
     # It will continue until all nodes have been populated
     steps = 0
     while len(unpopulated) != 0:
         # Any nodes with a populated neighbor should be populated in this step
-        to_populate = set((row, col) for (row, col) in unpopulated if neighbor_populated(arr, row, col))
+        to_populate = set((row, col) for (row, col) in unpopulated if neighbor_populated(grid, row, col))
 
         for (row, col) in to_populate:
-            arr[row][col] = 1
+            grid[row][col] = 1
 
         unpopulated -= to_populate
         steps += 1
