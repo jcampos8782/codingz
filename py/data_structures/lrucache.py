@@ -32,7 +32,7 @@ class LruCache:
         elif len(self.__cache) == self.__capacity:
             self.__pop()
 
-        item = [key, value, None, self.__head]
+        item = LruCache.Node(key=key, val=value)
         self.__append(item)
         self.__cache[key] = item
 
@@ -70,6 +70,8 @@ class LruCache:
         if not self.__is_empty():
             new_tail = self.__tail.prv
             self.__tail.prv = None
+            self.__cache.pop(self.__tail.key)
+
             self.__tail = new_tail
 
             if self.__tail is not None:
@@ -80,7 +82,8 @@ class LruCache:
                 self.__head = None
 
     class Node:
-        def __init__(self, val=None, nxt=None, prv=None):
+        def __init__(self, key=None, val=None, nxt=None, prv=None):
+            self.key = key
             self.val = val
             self.nxt = nxt
             self.prv = prv
