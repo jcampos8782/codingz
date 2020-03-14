@@ -19,7 +19,7 @@ class LruCache:
         item = self.__cache[key]
         self.__splice(item)
         self.__append(item)
-        return item[1]
+        return item.val
 
     def put(self, key, value):
         # If the key is already in the cache, move it to the back of the queue
@@ -38,30 +38,29 @@ class LruCache:
 
     def __splice(self, item):
         # Splice this item out of the list
-        prv = item[2]
-        nxt = item[3]
+        prv = item.prv
+        nxt = item.nxt
 
         # If this is the last item in the list, set the prv as the new tail
         if nxt is None:
             self.__tail = prv
         else:
-            nxt[2] = prv
+            nxt.prv = prv
 
         # If this is the first item in the list, set the head
         if prv is None:
             self.__head = nxt
         else:
-            prv[3] = nxt
+            prv.nxt = nxt
 
     def __is_empty(self):
         return len(self.__cache) == 0
 
     def __append(self, item):
-        if not self.__is_empty():
-            self.__head[2] = item
-            item[3] = self.__head
+        if not (self.__is_empty() or self.__head == item):
+            self.__head.prv = item
+            item.nxt = self.__head
 
-        item[2] = None
         self.__head = item
 
         if self.__tail is None:
@@ -69,7 +68,19 @@ class LruCache:
 
     def __pop(self):
         if not self.__is_empty():
-            new_tail = self.__tail[2]
-            new_tail[3] = None
-            del self.__cache[self.__tail[0]]
+            new_tail = self.__tail.prv
+            self.__tail.prv = None
             self.__tail = new_tail
+
+            if self.__tail is not None:
+                self.__tail.nxt = None
+
+            # Edge case for a capacity of 1
+            if self.__tail == self.__head:
+                self.__head = None
+
+    class Node:
+        def __init__(self, val=None, nxt=None, prv=None):
+            self.val = val
+            self.nxt = nxt
+            self.prv = prv

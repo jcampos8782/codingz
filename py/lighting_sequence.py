@@ -15,7 +15,7 @@ def get_lights_for_day(10, [0,0,1,1,0,1,0,0]
 
 Output should be an array of 1s and 0s which represent the state of the lights on day n.
 
-For an explanation of this solution, visit http://blog.jsoncampos.com/2020/02/24/interview-question-which-lights/
+For an explanation of this solution, visit https://medium.com/analytics-vidhya/interview-question-neighbors-lights-7b7940dd36f6
 """
 import functools
 
