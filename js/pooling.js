@@ -93,4 +93,3 @@ let poolSamples = (samples) => {
   return pools;
 }
 
-poolSamples(s);
